@@ -152,9 +152,10 @@ class HashMap:
                 new_buckets[hash_var].insert(cur.key, cur.value)
                 cur = cur.next
         
+        self.capacity = new_capacity
         self.buckets = new_buckets
         return
-        
+
     def get_keys(self) -> DynamicArray:
         """ This method returns a DynamicArray that contains all the keys stored in the hash map. The
         order of the keys in the DA does not matter. """
