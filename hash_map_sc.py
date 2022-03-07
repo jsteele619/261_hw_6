@@ -82,6 +82,7 @@ class HashMap:
         hash_var = self.hash_function(key) % self.capacity
         cur = self.buckets[hash_var]
         cur.insert(key, value)
+        self.size += 1
 
         return 
 
@@ -108,7 +109,7 @@ class HashMap:
         if cur.remove(key):
             self.size -= 1
         return
-        
+
     def remove2(self, key):
         hash_var = self.hash_function(key) % self.capacity
         cur, prev = self.buckets[hash_var].head, None
