@@ -60,7 +60,8 @@ class HashMap:
 
     def clear(self) -> None:
         """ This method clears the contents of the hash map. It does not change the underlying hash table capacity. """
-        self = HashMap(self.capacity, self.hash_function)
+        for _ in range(self.buckets.length()):
+            self.buckets.append(LinkedList())
         self.size = 0
         return 
 
