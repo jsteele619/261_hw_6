@@ -79,13 +79,17 @@ class HashMap:
     def put(self, key: str, value: object) -> None:
         """ This method updates the key / value pair in the hash map. If the given key already exists in the hash map, 
         its associated value must be replaced with the new value. If the given key is not in the hash map, a key / value pair must be added. """
-        hash_var = self.hash_function(key)
-        hash_var = hash_var % self.capacity
-        cur = self.buckets[hash_var].head
+        hash_var = self.hash_function(key) % self.capacity
+        cur = self.buckets[hash_var]
+
+        if cur.head == None:
+            cur.head =  SLNode(key, value)
+            self.size += 1
+            return
         
-        while cur.next != None:
-            if cur.key == key:
-                cur.value = value
+        while cur.head.next != None:
+            if cur.head.key == key:
+                cur.head.value = value
                 return
             cur = cur.next
         cur.next = SLNode(key, value)
@@ -112,7 +116,11 @@ class HashMap:
 
     def empty_buckets(self) -> int:
         """ This method returns the number of empty buckets in the hash table. """
-        return self.capacity - self.size
+        count = 0 
+        for i in range(self.buckets.length()):
+            if self.buckets[i].head != None:
+                count += 1
+        return count
 
     def table_load(self) -> float:
         """ This method returns the current hash table load factor. """
