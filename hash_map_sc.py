@@ -155,7 +155,6 @@ class HashMap:
                 cur = cur.next
         
         self.buckets = new_buckets
-
         return
 
     def get_keys(self) -> DynamicArray:
@@ -167,7 +166,7 @@ class HashMap:
             while cur:
                 new_array.append(cur.key)
                 cur = cur.next                     
-        return new_array.data
+        return new_array
 
 # BASIC TESTING
 if __name__ == "__main__":
