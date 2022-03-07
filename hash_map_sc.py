@@ -120,7 +120,7 @@ class HashMap:
         for i in range(self.buckets.length()):
             if self.buckets[i].head != None:
                 count += 1
-        return count
+        return self.capacity - count
 
     def table_load(self) -> float:
         """ This method returns the current hash table load factor. """
