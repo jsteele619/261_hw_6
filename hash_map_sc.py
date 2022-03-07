@@ -71,8 +71,9 @@ class HashMap:
     def put(self, key: str, value: object) -> None:
         """ This method updates the key / value pair in the hash map. If the given key already exists in the hash map, 
         its associated value must be replaced with the new value. If the given key is not in the hash map, a key / value pair must be added. """
-        hash = self.hash_function(key)
-        cur = self.buckets[hash].LinkedList.head
+        hash_var = self.hash_function(key)
+        hash_var = hash_var % self.capacity
+        cur = self.buckets[hash_var].head
         
         while cur != None:
             if cur.key == key:
@@ -81,7 +82,7 @@ class HashMap:
             cur = cur.next
         cur = SLNode(key, value)
         return 
-        
+
     def remove(self, key: str) -> None:
         """ This method removes the given key and its associated value from the hash map. If the key
         is not in the hash map, the method does nothing (no exception needs to be raised). """
