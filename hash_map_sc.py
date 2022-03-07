@@ -66,8 +66,16 @@ class HashMap:
     def get(self, key: str) -> object:
         """ This method returns the value associated with the given key. If the key is not in the hash
         map, the method returns None. """
-        pass
-
+        if self.size == 0:
+            return
+        hash_var = self.hash_function(key) % self.capacity
+        cur = self.buckets[hash_var].head
+        while cur != None:
+            if cur.key == key:
+                return cur.value
+            cur = cur.next
+        return
+        
     def put(self, key: str, value: object) -> None:
         """ This method updates the key / value pair in the hash map. If the given key already exists in the hash map, 
         its associated value must be replaced with the new value. If the given key is not in the hash map, a key / value pair must be added. """
@@ -81,6 +89,7 @@ class HashMap:
                 return
             cur = cur.next
         cur = SLNode(key, value)
+        self.size += 1
         return 
 
     def remove(self, key: str) -> None:
@@ -89,20 +98,25 @@ class HashMap:
         pass
 
     def contains_key(self, key: str) -> bool:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ This method returns True if the given key is in the hash map, otherwise it returns False. An
+        empty hash map does not contain any keys. """
+        if self.size == 0:
+            return False
+        hash_var = self.hash_function(key) % self.capacity
+        cur = self.buckets[hash_var].head
+        while cur != None:
+            if cur.key == key:
+                return True
+            cur = cur.next
+        return False
 
     def empty_buckets(self) -> int:
         """ This method returns the number of empty buckets in the hash table. """
         return self.capacity - self.size
 
     def table_load(self) -> float:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ This method returns the current hash table load factor. """
+        return self.size/ self.buckets.length()
 
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. All existing key / value pairs must remain in the new hash map, 
