@@ -74,10 +74,14 @@ class HashMap:
         hash = self.hash_function(key)
         cur = self.buckets[hash].LinkedList.head
         
-        
-        while cur.key != key or cur.next != None:
+        while cur != None:
+            if cur.key == key:
+                cur.value = value
+                return
             cur = cur.next
-
+        cur = SLNode(key, value)
+        return 
+        
     def remove(self, key: str) -> None:
         """ This method removes the given key and its associated value from the hash map. If the key
         is not in the hash map, the method does nothing (no exception needs to be raised). """
