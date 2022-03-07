@@ -100,9 +100,19 @@ class HashMap:
         """ This method removes the given key and its associated value from the hash map. If the key
         is not in the hash map, the method does nothing (no exception needs to be raised). """
         hash_var = self.hash_function(key) % self.capacity
-        cur = self.buckets[hash_var]
-        cur.remove(key)
+        cur, prev = self.buckets[hash_var].head, None
+        if cur == None:
+            return
         
+        while cur is not None:
+            if cur.key == key:
+                if prev:
+                    prev.next = cur.next
+                else:
+                    self.head = cur.next
+                return
+            prev = cur
+            cur = cur.next     
         return
 
     def contains_key(self, key: str) -> bool:
