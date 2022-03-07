@@ -81,9 +81,13 @@ class HashMap:
         its associated value must be replaced with the new value. If the given key is not in the hash map, a key / value pair must be added. """
         hash_var = self.hash_function(key) % self.capacity
         cur = self.buckets[hash_var]
+        cur.insert(key, value)
 
-        if cur.head == None:
-            cur.head =  SLNode(key, value)
+        return 
+
+    def put2(self, key, value):
+        if cur == None:
+            cur = SLNode(key, value)
             self.size += 1
             return
         
@@ -94,11 +98,18 @@ class HashMap:
             cur = cur.next
         cur.next = SLNode(key, value)
         self.size += 1
-        return 
+        return
 
     def remove(self, key: str) -> None:
         """ This method removes the given key and its associated value from the hash map. If the key
         is not in the hash map, the method does nothing (no exception needs to be raised). """
+        hash_var = self.hash_function(key) % self.capacity
+        cur = self.buckets[hash_var]
+        if cur.remove(key):
+            self.size -= 1
+        return
+        
+    def remove2(self, key):
         hash_var = self.hash_function(key) % self.capacity
         cur, prev = self.buckets[hash_var].head, None
         if cur == None:
@@ -114,7 +125,6 @@ class HashMap:
             prev = cur
             cur = cur.next     
         return
-
     def contains_key(self, key: str) -> bool:
         """ This method returns True if the given key is in the hash map, otherwise it returns False. An
         empty hash map does not contain any keys. """
