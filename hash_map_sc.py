@@ -93,12 +93,12 @@ class HashMap:
                 cur.value = value
                 return
             if cur.next is None:
-                cur.next = SLNode(key, value)
+                link_list.insert(key, value)
                 self.size += 1
                 return
             cur = cur.next
         return 
-
+    
     def put2(self, key, value):
         if cur == None:
             cur = SLNode(key, value)
