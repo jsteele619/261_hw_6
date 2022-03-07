@@ -99,7 +99,11 @@ class HashMap:
     def remove(self, key: str) -> None:
         """ This method removes the given key and its associated value from the hash map. If the key
         is not in the hash map, the method does nothing (no exception needs to be raised). """
-        pass
+        hash_var = self.hash_function(key) % self.capacity
+        cur = self.buckets[hash_var]
+        cur.remove(key)
+        
+        return
 
     def contains_key(self, key: str) -> bool:
         """ This method returns True if the given key is in the hash map, otherwise it returns False. An
