@@ -141,15 +141,20 @@ class HashMap:
         if new_capacity < 0:
             return
         
-        new_table = HashMap(new_capacity, self.hash_function)
-        
+        new_buckets = DynamicArray()
+        for _ in range(new_capacity):
+            new_buckets.append(LinkedList())
+
         for val in range(self.buckets.length()):
             cur = self.buckets[val].head
             while cur is not None:
                 hash_var = self.hash_function(cur.key) % new_capacity
-                new_table.buckets[hash_var].insert(cur.key, cur.value)
+                new_buckets[hash_var].insert(cur.key, cur.value)
                 cur = cur.next
-            
+        
+        self.buckets = new_buckets
+        return
+        
     def get_keys(self) -> DynamicArray:
         """ This method returns a DynamicArray that contains all the keys stored in the hash map. The
         order of the keys in the DA does not matter. """
