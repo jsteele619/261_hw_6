@@ -169,7 +169,6 @@ class HashMap:
                 cur = cur.next                     
         return new_array.data
 
-
 # BASIC TESTING
 if __name__ == "__main__":
 
