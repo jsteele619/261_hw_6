@@ -144,6 +144,8 @@ class HashMap:
         new_buckets = DynamicArray()
         for _ in range(new_capacity):
             new_buckets.append(LinkedList())
+        
+        self.capacity = new_capacity
 
         for val in range(self.buckets.length()):
             cur = self.buckets[val].head
@@ -152,8 +154,8 @@ class HashMap:
                 new_buckets[hash_var].insert(cur.key, cur.value)
                 cur = cur.next
         
-        self.capacity = new_capacity
         self.buckets = new_buckets
+
         return
 
     def get_keys(self) -> DynamicArray:
