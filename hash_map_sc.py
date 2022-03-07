@@ -174,7 +174,7 @@ class HashMap:
         for val in range(self.buckets.length()):
             cur = self.buckets[val].head
             while cur is not None:
-                hash_var = self.hash_function(cur.key) % self.capacity
+                hash_var = self.hash_function(cur.key) % new_capacity
                 new_table.buckets[hash_var].insert(cur.key, cur.value)
                 cur = cur.next
             
