@@ -81,9 +81,19 @@ class HashMap:
         its associated value must be replaced with the new value. If the given key is not in the hash map, a key / value pair must be added. """
         hash_var = self.hash_function(key) % self.capacity
         cur = self.buckets[hash_var]
-        cur.insert(key, value)
-        self.size += 1
+        if cur.head is None:
+            cur.insert(key, value)
+            self.size += 1
+            return
 
+        while cur.head is not None:
+            if cur.key == key:
+                cur.value = value
+                return
+            if cur.next is None:
+                cur.next = SLNode(key, value)
+                self.size += 1
+                return
         return 
 
     def put2(self, key, value):
