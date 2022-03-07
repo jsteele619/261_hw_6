@@ -138,7 +138,7 @@ class HashMap:
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. All existing key / value pairs must remain in the new hash map, 
         and all hash table links must be rehashed. If new_capacity is less than 1, the method does nothing. """
-        if new_capacity < 0:
+        if new_capacity <= 0:
             return
         
         new_buckets = DynamicArray()
