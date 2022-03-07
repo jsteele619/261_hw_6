@@ -154,8 +154,17 @@ class HashMap:
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. All existing key / value pairs must remain in the new hash map, 
         and all hash table links must be rehashed. If new_capacity is less than 1, the method does nothing. """
-        pass
-
+        if new_capacity < 0 :
+            return
+        new_table = HashMap(new_capacity, self.hash_function)
+        
+        for val in range(self.buckets.length()):
+            cur = self.buckets[val].head
+            while cur is not None:
+                hash_var = self.hash_function(cur.key) % self.capacity
+                new_table.buckets[hash_var].insert(cur.key, cur.value)
+                cur = cur.next
+            
     def get_keys(self) -> DynamicArray:
         """ This method returns a DynamicArray that contains all the keys stored in the hash map. The
         order of the keys in the DA does not matter. """
@@ -166,18 +175,6 @@ class HashMap:
                 new_array.append(cur.value)
                 cur = cur.next                     
         return
-
-    def hash_helper(hash_function, key:str) -> int:
-        """ Helper function that includes the hash function into the hashing """
-        if key:
-            hash = hash_function(key)
-            return hash
-        else:
-            return
-
-    def linked_list_helper(hash_index):
-        if hash_index:
-            return
 
 
 # BASIC TESTING
