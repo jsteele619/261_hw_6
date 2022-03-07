@@ -60,8 +60,8 @@ class HashMap:
 
     def clear(self) -> None:
         """ This method clears the contents of the hash map. It does not change the underlying hash table capacity. """
-        for _ in range(self.buckets.length()):
-            self.buckets.append(LinkedList())
+        for val in range(self.buckets.length()):
+            self.buckets[val] = LinkedList()
         self.size = 0
         return 
 
@@ -138,8 +138,9 @@ class HashMap:
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. All existing key / value pairs must remain in the new hash map, 
         and all hash table links must be rehashed. If new_capacity is less than 1, the method does nothing. """
-        if new_capacity < 0 :
+        if new_capacity < 0:
             return
+        
         new_table = HashMap(new_capacity, self.hash_function)
         
         for val in range(self.buckets.length()):
