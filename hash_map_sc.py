@@ -83,12 +83,12 @@ class HashMap:
         hash_var = hash_var % self.capacity
         cur = self.buckets[hash_var].head
         
-        while cur != None:
+        while cur.next != None:
             if cur.key == key:
                 cur.value = value
                 return
             cur = cur.next
-        cur = SLNode(key, value)
+        cur.next = SLNode(key, value)
         self.size += 1
         return 
 
