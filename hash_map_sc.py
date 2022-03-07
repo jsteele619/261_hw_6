@@ -61,6 +61,7 @@ class HashMap:
     def clear(self) -> None:
         """ This method clears the contents of the hash map. It does not change the underlying hash table capacity. """
         self = HashMap(self.capacity, self.hash_function)
+        self.size = 0
         return 
 
     def get(self, key: str) -> object:
@@ -98,21 +99,6 @@ class HashMap:
                 return
             cur = cur.next
         return 
-    
-    def put2(self, key, value):
-        if cur == None:
-            cur = SLNode(key, value)
-            self.size += 1
-            return
-        
-        while cur.head.next != None:
-            if cur.head.key == key:
-                cur.head.value = value
-                return
-            cur = cur.next
-        cur.next = SLNode(key, value)
-        self.size += 1
-        return
 
     def remove(self, key: str) -> None:
         """ This method removes the given key and its associated value from the hash map. If the key
@@ -123,22 +109,6 @@ class HashMap:
             self.size -= 1
         return
 
-    def remove2(self, key):
-        hash_var = self.hash_function(key) % self.capacity
-        cur, prev = self.buckets[hash_var].head, None
-        if cur == None:
-            return
-        
-        while cur is not None:
-            if cur.key == key:
-                if prev:
-                    prev.next = cur.next
-                else:
-                    self.head = cur.next
-                return
-            prev = cur
-            cur = cur.next     
-        return
     def contains_key(self, key: str) -> bool:
         """ This method returns True if the given key is in the hash map, otherwise it returns False. An
         empty hash map does not contain any keys. """
@@ -187,7 +157,7 @@ class HashMap:
             while cur:
                 new_array.append(cur.value)
                 cur = cur.next                     
-        return
+        return new_array.data
 
 
 # BASIC TESTING
