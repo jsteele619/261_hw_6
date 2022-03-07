@@ -136,7 +136,7 @@ class HashMap:
         order of the keys in the DA does not matter. """
         new_array = DynamicArray()
         for i in range(self.capacity):
-            cur = self.buckets[i].LinkedList.head
+            cur = self.buckets[i].head
             while cur:
                 new_array.append(cur.value)
                 cur = cur.next                     
