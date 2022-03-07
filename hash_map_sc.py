@@ -165,7 +165,7 @@ class HashMap:
         for i in range(self.capacity):
             cur = self.buckets[i].head
             while cur:
-                new_array.append(cur.value)
+                new_array.append(cur.key)
                 cur = cur.next                     
         return new_array.data
 
