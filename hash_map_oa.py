@@ -3,11 +3,11 @@
 # Course: CS261 - Data Structures
 # Assignment: Hash Table 
 # Due Date: 3/15/22
-# Description: 
+# Description: Use a dynamic array to store your hash table and implement Open Addressing 
+# with Quadratic Probing for collision resolution inside that dynamic array
 
 
 from a6_include import *
-
 
 class HashEntry:
 
@@ -80,66 +80,108 @@ class HashMap:
         return out
 
     def clear(self) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ This method clears the contents of the hash map. It does not change the underlying hash
+        table capacity. """
+        for val in range(self.capacity):
+            self.buckets[val] = None
+        self.size = 0
+        return
 
     def get(self, key: str) -> object:
-        """
-        TODO: Write this implementation
-        """
+        """ This method returns the value associated with the given key. If the key is not in the hash
+        map, the method returns None. """
         # quadratic probing required
-        pass
+        if self.size == 0:
+            return
+        hash_var = self.hash_function(key) % self.capacity
+        j = 1
+        
+        while self.buckets[hash_var] is not None:
+            if self.buckets[hash_var].is_tombstone is True:
+                hash_var = (hash_var + j**2) % self.capacity
+                j += 1
+                continue
+            if self.buckets[hash_var].key == key:
+                return self.buckets[hash_var].value
+        return
 
     def put(self, key: str, value: object) -> None:
-        """
-        TODO: Write this implementation
-        """
+        """ This method updates the key / value pair in the hash map. """
         # remember, if the load factor is greater than or equal to 0.5,
         # resize the table before putting the new key/value pair
         #
         # quadratic probing required
-        pass
+        new_entry = HashEntry(key, value)
+        hash_var = self.hash_function(key) % self.capacity
+        j = 1
+
+        while self.buckets[hash_var] is not None or self.buckets[hash_var].is_tombstone is True:
+            hash_var = (hash_var + j**2) % self.capacity
+            j+=1
+        
+        self.buckets[hash_var] = new_entry
+        self.size += 1
+        return
 
     def remove(self, key: str) -> None:
-        """
-        TODO: Write this implementation
-        """
+        """ This method removes the given key and its associated value from the hash map. If the key
+        is not in the hash map, the method does nothing (no exception needs to be raised). """
         # quadratic probing required
-        pass
+        hash_var = self.hash_function(key) % self.capacity
+        j = 1
+
+        while self.buckets[hash_var] is not None:
+            if self.buckets[hash_var].key == key:
+                self.buckets[hash_var] = None
+                self.size -= 1
+                return
+            elif self.buckets[hash_var].is_tombstone is True:
+                continue
+        return
+
 
     def contains_key(self, key: str) -> bool:
-        """
-        TODO: Write this implementation
-        """
+        """ This method returns True if the given key is in the hash map, otherwise it returns False. An
+        empty hash map does not contain any keys. """
         # quadratic probing required
-        pass
+        if self.size == 0:
+            return
+        hash_var = self.hash_function(key) % self.capacity
+        j = 1
+        
+        while self.buckets[hash_var] is not None:
+            if self.buckets[hash_var].is_tombstone is True:
+                hash_var = (hash_var + j**2) % self.capacity
+                j += 1
+                continue
+            if self.buckets[hash_var].key == key:
+                return True
+        return False
 
     def empty_buckets(self) -> int:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ This method returns the number of empty buckets in the hash table. """
+        count = 0
+        for i in range(self.buckets.length()):
+            if self.buckets[i].is_tombstone is False and self.buckets[i].key:
+                count += 1
+        return self.capacity - count
 
     def table_load(self) -> float:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ This method returns the current hash table load factor. """
+        return self.size / self.buckets.length()
 
     def resize_table(self, new_capacity: int) -> None:
-        """
-        TODO: Write this implementation
-        """
+        """ This method changes the capacity of the internal hash table. """
         # remember to rehash non-deleted entries into new table
         pass
 
     def get_keys(self) -> DynamicArray:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ This method returns a DynamicArray that contains all the keys stored in the hash map. """
+        new_array = DynamicArray()
+        for i in range(self.capacity):
+            cur = self.buckets[i]
+            if cur.is_tombstone == False and cur.key:
+                new_array.append(cur.key)
 
 
 if __name__ == "__main__":
