@@ -167,9 +167,11 @@ class HashMap:
             if self.buckets[hash_var].is_tombstone is True:
                 hash_var = (hash_var + j**2) % self.capacity
                 j += 1
-                continue
-            if self.buckets[hash_var].key == key:
+            elif self.buckets[hash_var].key == key:
                 return True
+            else:
+                hash_var = (hash_var + j**2) % self.capacity
+                j += 1
         return False
 
     def empty_buckets(self) -> int:
@@ -188,7 +190,6 @@ class HashMap:
         """ This method changes the capacity of the internal hash table. """
         # remember to rehash non-deleted entries into new table
         the_keys = self.get_keys()
-        print(the_keys.length())
         new_array = DynamicArray()
         j = 1
 
