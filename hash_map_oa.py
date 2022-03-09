@@ -98,11 +98,13 @@ class HashMap:
         
         while self.buckets[hash_var] is not None:
             if self.buckets[hash_var].is_tombstone is True:
-                hash_var = (hash_var + j**2) % self.capacity
+                hash_var = (hash_var + j*j) % self.capacity
                 j += 1
-                continue
-            if self.buckets[hash_var].key == key:
+            elif self.buckets[hash_var].key == key:
                 return self.buckets[hash_var].value
+            else:
+                hash_var = (hash_var + j*j) % self.capacity
+                j += 1
         return
 
     def put(self, key: str, value: object) -> None:
@@ -111,6 +113,10 @@ class HashMap:
         # resize the table before putting the new key/value pair
         #
         # quadratic probing required
+        
+        if self.table_load() >= .5:
+            self.resize_table(self.capacity * 2)
+        
         new_entry = HashEntry(key, value)
         hash_var = self.hash_function(key) % self.capacity
         j = 1
@@ -137,13 +143,16 @@ class HashMap:
 
         while self.buckets[hash_var] is not None:
             if self.buckets[hash_var].key == key:
-                self.buckets[hash_var] = None
+                self.buckets[hash_var].is_tombstone = True
                 self.size -= 1
                 return
             elif self.buckets[hash_var].is_tombstone is True:
-                continue
+                hash_var = (hash_var + j**2) % self.capacity
+                j+=1
+            else:
+               hash_var = (hash_var + j**2) % self.capacity
+               j+=1     
         return
-
 
     def contains_key(self, key: str) -> bool:
         """ This method returns True if the given key is in the hash map, otherwise it returns False. An
@@ -178,16 +187,37 @@ class HashMap:
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. """
         # remember to rehash non-deleted entries into new table
-        pass
+        the_keys = self.get_keys()
+        print(the_keys.length())
+        new_array = DynamicArray()
+        j = 1
+
+        for i in range(new_capacity):
+            new_array.append(None)
+
+        for i in range(the_keys.length()):
+            val = the_keys.get_at_index(i)
+            hash_var = self.hash_function(val) % new_capacity
+            new_entry = HashEntry(val, self.get(val))
+
+            while new_array[hash_var] is not None:
+                hash_var = (hash_var + j**2) % new_capacity
+                j+=1
+        
+            new_array[hash_var] = new_entry
+        
+        self.capacity = new_capacity
+        self.buckets = new_array
 
     def get_keys(self) -> DynamicArray:
         """ This method returns a DynamicArray that contains all the keys stored in the hash map. """
         new_array = DynamicArray()
         for i in range(self.capacity):
             cur = self.buckets[i]
-            if cur.is_tombstone == False and cur.key:
+            if cur is not None and cur.is_tombstone == False:
                 new_array.append(cur.key)
 
+        return new_array
 
 if __name__ == "__main__":
 
@@ -207,8 +237,8 @@ if __name__ == "__main__":
     print("\nPDF - empty_buckets example 2")
     print("-----------------------------")
     # this test assumes that put() has already been correctly implemented
-    m = HashMap(50, hash_function_1)
-    for i in range(30):
+    m = HashMap(10, hash_function_1)
+    for i in range(150):
         m.put('key' + str(i), i * 100)
         if i % 30 == 0:
             print(m.empty_buckets(), m.size, m.capacity)
