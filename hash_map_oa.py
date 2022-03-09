@@ -115,7 +115,12 @@ class HashMap:
         hash_var = self.hash_function(key) % self.capacity
         j = 1
 
-        while self.buckets[hash_var] is not None or self.buckets[hash_var].is_tombstone is True:
+        while self.buckets[hash_var] is not None:
+            if self.buckets[hash_var].is_tombstone is True:
+                self.buckets[hash_var] = new_entry
+                self.size += 1
+                return
+
             hash_var = (hash_var + j**2) % self.capacity
             j+=1
         
@@ -162,9 +167,9 @@ class HashMap:
         """ This method returns the number of empty buckets in the hash table. """
         count = 0
         for i in range(self.buckets.length()):
-            if self.buckets[i].is_tombstone is False and self.buckets[i].key:
+            if self.buckets[i] is None or self.buckets[i].is_tombstone is True:
                 count += 1
-        return self.capacity - count
+        return count
 
     def table_load(self) -> float:
         """ This method returns the current hash table load factor. """
@@ -203,7 +208,7 @@ if __name__ == "__main__":
     print("-----------------------------")
     # this test assumes that put() has already been correctly implemented
     m = HashMap(50, hash_function_1)
-    for i in range(150):
+    for i in range(30):
         m.put('key' + str(i), i * 100)
         if i % 30 == 0:
             print(m.empty_buckets(), m.size, m.capacity)
