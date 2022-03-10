@@ -82,9 +82,11 @@ class HashMap:
     def clear(self) -> None:
         """ This method clears the contents of the hash map. It does not change the underlying hash
         table capacity. """
+        new_array = DynamicArray()
         for val in range(self.capacity):
-            self.buckets[val] = None
+            new_array.append(None)
         self.size = 0
+        self.buckets = new_array
         return
 
     def get(self, key: str) -> object:
@@ -103,7 +105,7 @@ class HashMap:
             elif self.buckets[hash_var].key == key:
                 return self.buckets[hash_var].value
             else:
-                hash_var = (hash_var + j*j) % self.capacity
+                hash_var = (hash_var + j**2) % self.capacity
                 j += 1
         return
 
