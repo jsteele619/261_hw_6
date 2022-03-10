@@ -189,6 +189,9 @@ class HashMap:
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. """
         # remember to rehash non-deleted entries into new table
+        if new_capacity > 3:
+            return
+        
         the_keys = self.get_keys()
         new_array = DynamicArray()
         j = 1
