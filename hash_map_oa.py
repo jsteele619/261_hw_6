@@ -96,16 +96,17 @@ class HashMap:
         if self.size == 0:
             return
         hash_var = self.hash_function(key) % self.capacity
+        hash_initial = self.hash_function(key) % self.capacity
         j = 1
         
         while self.buckets[hash_var] is not None:
             if self.buckets[hash_var].is_tombstone is True:
-                hash_var = (hash_var + j*j) % self.capacity
+                hash_var = (hash_initial + j*j) % self.capacity
                 j += 1
             elif self.buckets[hash_var].key == key:
                 return self.buckets[hash_var].value
             else:
-                hash_var = (hash_var + j**2) % self.capacity
+                hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
         return
 
