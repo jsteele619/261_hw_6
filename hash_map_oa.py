@@ -83,7 +83,7 @@ class HashMap:
         """ This method clears the contents of the hash map. It does not change the underlying hash
         table capacity. """
         new_array = DynamicArray()
-        for val in range(self.capacity):
+        for _ in range(self.capacity):
             new_array.append(None)
         self.size = 0
         self.buckets = new_array
@@ -131,9 +131,10 @@ class HashMap:
             elif self.buckets[hash_var].key == key:
                 self.buckets[hash_var] = new_entry
                 return
-            hash_var = (hash_var + j**2) % self.capacity
-            j+=1
-        
+            else:
+                hash_var = (hash_var + j**2) % self.capacity
+                j += 1
+            
         self.buckets[hash_var] = new_entry
         self.size += 1
         return
@@ -163,7 +164,7 @@ class HashMap:
         empty hash map does not contain any keys. """
         # quadratic probing required
         if self.size == 0:
-            return
+            return False
         hash_var = self.hash_function(key) % self.capacity
         j = 1
         
