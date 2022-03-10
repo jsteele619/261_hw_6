@@ -131,7 +131,7 @@ class HashMap:
                 self.size += 1
                 return
             elif self.buckets[hash_var].key == key:
-                self.buckets[hash_var] = new_entry
+                self.buckets[hash_var].value = value
                 return
             else:
                 hash_var = (hash_initial + j**2) % self.capacity
@@ -200,7 +200,7 @@ class HashMap:
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. """
         # remember to rehash non-deleted entries into new table
-        if new_capacity < 1 or new_capacity < self.capacity:
+        if new_capacity < 1 or new_capacity < self.size:
             return
         
         the_keys = self.get_keys()
