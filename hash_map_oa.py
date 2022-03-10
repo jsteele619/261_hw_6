@@ -149,9 +149,12 @@ class HashMap:
 
         while self.buckets[hash_var] is not None:
             if self.buckets[hash_var].key == key:
-                self.buckets[hash_var].is_tombstone = True
-                self.size -= 1
-                return
+                if self.buckets[hash_var].is_tombstone is True:
+                    return
+                else:
+                    self.buckets[hash_var].is_tombstone = True
+                    self.size -= 1
+                    return
             else:
                 hash_var = (hash_initial + j**2) % self.capacity
                 j+=1     
