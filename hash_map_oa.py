@@ -152,9 +152,6 @@ class HashMap:
                 self.buckets[hash_var].is_tombstone = True
                 self.size -= 1
                 return
-            elif self.buckets[hash_var].is_tombstone is True:
-                hash_var = (hash_initial + j**2) % self.capacity
-                j+=1
             else:
                 hash_var = (hash_initial + j**2) % self.capacity
                 j+=1     
@@ -202,37 +199,6 @@ class HashMap:
         for i in range(old_buckets.length()):
             if old_buckets[i] is not None and old_buckets[i].is_tombstone is False:
                 self.put(old_buckets[i].key, old_buckets[i].value)
-
-    def resize_table2(self, new_capacity: int) -> None:
-        """ This method changes the capacity of the internal hash table. """
-        # remember to rehash non-deleted entries into new table
-        if new_capacity < 1 or new_capacity < self.size:
-            return
-
-        new_array = DynamicArray()
-        j = 1
-
-        for i in range(new_capacity):
-            new_array.append(None)
-
-        for i in range(self.capacity):
-            if self.buckets[i] is not None:
-                val = self.buckets[i]
-                if val.is_tombstone is True:
-                    pass
-                else:
-                    hash_var = self.hash_function(val.key) % new_capacity
-                    hash_initial = self.hash_function(val.key) % new_capacity
-                    new_entry = HashEntry(val.key, val.value)
-
-                    while new_array[hash_var] is not None:
-                        hash_var = (hash_initial + j**2) % new_capacity
-                        j+=1
-            
-                    new_array[hash_var] = new_entry
-        
-        self.capacity = new_capacity
-        self.buckets = new_array
 
     def get_keys(self) -> DynamicArray:
         """ This method returns a DynamicArray that contains all the keys stored in the hash map. """
