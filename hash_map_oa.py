@@ -173,11 +173,13 @@ class HashMap:
         j = 1
         
         while self.buckets[hash_var] is not None:
-            if self.buckets[hash_var].is_tombstone is True:
+            if self.buckets[hash_var].key == key:
+                if self.buckets[hash_var].is_tombstone is True:
+                    return False
+                return True
+            elif self.buckets[hash_var].is_tombstone is True:
                 hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
-            elif self.buckets[hash_var].key == key:
-                return True
             else:
                 hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
