@@ -156,8 +156,8 @@ class HashMap:
                 hash_var = (hash_initial + j**2) % self.capacity
                 j+=1
             else:
-               hash_var = (hash_initial + j**2) % self.capacity
-               j+=1     
+                hash_var = (hash_initial + j**2) % self.capacity
+                j+=1     
         return
 
     def contains_key(self, key: str) -> bool:
@@ -222,8 +222,7 @@ class HashMap:
         # remember to rehash non-deleted entries into new table
         if new_capacity < 1 or new_capacity < self.size:
             return
-        
-        the_keys = self.get_keys()
+
         new_array = DynamicArray()
         j = 1
 
@@ -231,17 +230,18 @@ class HashMap:
             new_array.append(None)
 
 
-        for i in range(the_keys.length()):
-            val = the_keys[i]
-            hash_var = self.hash_function(val) % new_capacity
-            hash_initial = self.hash_function(val) % new_capacity
-            new_entry = HashEntry(val, self.get(val))
+        for i in range(self.capacity):
+            if self.buckets[i]:
+                val = self.buckets[i]
+                hash_var = self.hash_function(val.key) % new_capacity
+                hash_initial = self.hash_function(val.key) % new_capacity
+                new_entry = HashEntry(val.key, val.value)
 
-            while new_array[hash_var] is not None:
-                hash_var = (hash_initial + j**2) % new_capacity
-                j+=1
-        
-            new_array[hash_var] = new_entry
+                while new_array[hash_var] is not None:
+                    hash_var = (hash_initial + j**2) % new_capacity
+                    j+=1
+            
+                new_array[hash_var] = new_entry
         
         self.capacity = new_capacity
         self.buckets = new_array
@@ -425,8 +425,6 @@ if __name__ == "__main__":
 
         for key in keys:
             result &= m.contains_key(str(key))
-            print(m.contains_key(str(key)))
-            print(m.contains_key(str(key)))
             result &= not m.contains_key(str(key + 1))
         print(capacity, result, m.size, m.capacity, round(m.table_load(), 2))
 
