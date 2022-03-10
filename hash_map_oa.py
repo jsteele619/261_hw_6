@@ -121,6 +121,7 @@ class HashMap:
         
         new_entry = HashEntry(key, value)
         hash_var = self.hash_function(key) % self.capacity
+        hash_initial = self.hash_function(key) % self.capacity
         j = 1
 
         while self.buckets[hash_var] is not None:
@@ -132,7 +133,7 @@ class HashMap:
                 self.buckets[hash_var] = new_entry
                 return
             else:
-                hash_var = (hash_var + j**2) % self.capacity
+                hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
             
         self.buckets[hash_var] = new_entry
@@ -144,6 +145,7 @@ class HashMap:
         is not in the hash map, the method does nothing (no exception needs to be raised). """
         # quadratic probing required
         hash_var = self.hash_function(key) % self.capacity
+        hash_initial = self.hash_function(key) % self.capacity
         j = 1
 
         while self.buckets[hash_var] is not None:
@@ -152,10 +154,10 @@ class HashMap:
                 self.size -= 1
                 return
             elif self.buckets[hash_var].is_tombstone is True:
-                hash_var = (hash_var + j**2) % self.capacity
+                hash_var = (hash_initial + j**2) % self.capacity
                 j+=1
             else:
-               hash_var = (hash_var + j**2) % self.capacity
+               hash_var = (hash_initial + j**2) % self.capacity
                j+=1     
         return
 
@@ -166,16 +168,17 @@ class HashMap:
         if self.size == 0:
             return False
         hash_var = self.hash_function(key) % self.capacity
+        hash_initial = self.hash_function(key) % self.capacity
         j = 1
         
         while self.buckets[hash_var] is not None:
             if self.buckets[hash_var].is_tombstone is True:
-                hash_var = (hash_var + j**2) % self.capacity
+                hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
             elif self.buckets[hash_var].key == key:
                 return True
             else:
-                hash_var = (hash_var + j**2) % self.capacity
+                hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
         return False
 
@@ -207,10 +210,11 @@ class HashMap:
         for i in range(the_keys.length()):
             val = the_keys.get_at_index(i)
             hash_var = self.hash_function(val) % new_capacity
+            hash_initial = self.hash_function(key) % self.capacity
             new_entry = HashEntry(val, self.get(val))
 
             while new_array[hash_var] is not None:
-                hash_var = (hash_var + j**2) % new_capacity
+                hash_var = (hash_initial + j**2) % new_capacity
                 j+=1
         
             new_array[hash_var] = new_entry
