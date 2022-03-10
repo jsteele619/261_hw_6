@@ -210,7 +210,7 @@ class HashMap:
         for i in range(the_keys.length()):
             val = the_keys.get_at_index(i)
             hash_var = self.hash_function(val) % new_capacity
-            hash_initial = self.hash_function(key) % self.capacity
+            hash_initial = self.hash_function(val) % self.capacity
             new_entry = HashEntry(val, self.get(val))
 
             while new_array[hash_var] is not None:
