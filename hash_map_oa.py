@@ -126,7 +126,9 @@ class HashMap:
                 self.buckets[hash_var] = new_entry
                 self.size += 1
                 return
-
+            elif self.buckets[hash_var].key == key:
+                self.buckets[hash_var] = new_entry
+                return
             hash_var = (hash_var + j**2) % self.capacity
             j+=1
         
