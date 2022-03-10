@@ -95,16 +95,14 @@ class HashMap:
         # quadratic probing required
         if self.size == 0:
             return
+
         hash_var = self.hash_function(key) % self.capacity
         hash_initial = self.hash_function(key) % self.capacity
         j = 1
         
         while self.buckets[hash_var] is not None:
-            if self.buckets[hash_var].is_tombstone is True:
-                hash_var = (hash_initial + j*j) % self.capacity
-                j += 1
-            elif self.buckets[hash_var].key == key:
-                return self.buckets[hash_var].value
+            if self.buckets[hash_var].key == key and self.buckets[hash_var].is_tombstone is False:
+                return self.buckets[hash_var].value 
             else:
                 hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
@@ -117,7 +115,7 @@ class HashMap:
         #
         # quadratic probing required
         
-        if self.table_load() >= .5:
+        if self.table_load() >= 0.5:
             self.resize_table(self.capacity * 2)
         
         new_entry = HashEntry(key, value)
@@ -126,17 +124,17 @@ class HashMap:
         j = 1
 
         while self.buckets[hash_var] is not None:
-            if self.buckets[hash_var].is_tombstone is True:
+            if self.buckets[hash_var].key == key and self.buckets[hash_var].is_tombstone is False:
+                self.buckets[hash_var] = new_entry
+                return
+            elif self.buckets[hash_var].is_tombstone is True:
                 self.buckets[hash_var] = new_entry
                 self.size += 1
-                return
-            elif self.buckets[hash_var].key == key:
-                self.buckets[hash_var] = new_entry
                 return
             else:
                 hash_var = (hash_initial + j**2) % self.capacity
                 j += 1
-            
+           
         self.buckets[hash_var] = new_entry
         self.size += 1
         return
@@ -197,6 +195,28 @@ class HashMap:
         """ This method returns the current hash table load factor. """
         return self.size / self.buckets.length()
 
+    def resize_table2(self, new_capacity: int) -> None:
+        """ This method changes the capacity of the internal hash table. """
+        if new_capacity < self.size or new_capacity < 1:
+            return
+
+        the_keys = self.get_keys()
+        new_array = DynamicArray()
+        saved_bucket = self.buckets
+        self.clear()
+        j = 1
+
+        for i in range(the_keys.length()):
+            val = the_keys[i]
+            hash_var = self.hash_function(val) % new_capacity
+            hash_initial = self.hash_function(val) % new_capacity
+        
+            while self.buckets[hash_var] is not None:
+                hash_var = (hash_initial + j**2) % new_capacity
+                j+=1
+            
+            self.buckets[hash_var] = 2
+    
     def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. """
         # remember to rehash non-deleted entries into new table
@@ -210,10 +230,11 @@ class HashMap:
         for i in range(new_capacity):
             new_array.append(None)
 
+
         for i in range(the_keys.length()):
-            val = the_keys.get_at_index(i)
+            val = the_keys[i]
             hash_var = self.hash_function(val) % new_capacity
-            hash_initial = self.hash_function(val) % self.capacity
+            hash_initial = self.hash_function(val) % new_capacity
             new_entry = HashEntry(val, self.get(val))
 
             while new_array[hash_var] is not None:
@@ -343,6 +364,10 @@ if __name__ == "__main__":
     for key in keys:
         # all inserted keys must be present
         result &= m.contains_key(str(key))
+        #print(m.contains_key(str(key)))
+        #print(m.contains_key(str(key+1)))
+        #print(str(key+1))
+        #print(m.get(str(key)))
         # NOT inserted keys must be absent
         result &= not m.contains_key(str(key + 1))
     print(result)
@@ -382,6 +407,7 @@ if __name__ == "__main__":
     m.resize_table(30)
     print(m.size, m.capacity, m.get('key1'), m.contains_key('key1'))
 
+
     print("\nPDF - resize example 2")
     print("----------------------")
     m = HashMap(75, hash_function_2)
@@ -399,8 +425,11 @@ if __name__ == "__main__":
 
         for key in keys:
             result &= m.contains_key(str(key))
+            print(m.contains_key(str(key)))
+            print(m.contains_key(str(key)))
             result &= not m.contains_key(str(key + 1))
         print(capacity, result, m.size, m.capacity, round(m.table_load(), 2))
+
 
     print("\nPDF - get_keys example 1")
     print("------------------------")
