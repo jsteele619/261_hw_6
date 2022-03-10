@@ -191,29 +191,19 @@ class HashMap:
         """ This method returns the current hash table load factor. """
         return self.size / self.buckets.length()
 
-    def resize_table2(self, new_capacity: int) -> None:
+    def resize_table(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. """
         if new_capacity < self.size or new_capacity < 1:
             return
-
-        the_keys = self.get_keys()
-        new_array = DynamicArray()
-        saved_bucket = self.buckets
+        self.capacity = new_capacity
+        old_buckets = self.buckets
         self.clear()
-        j = 1
 
-        for i in range(the_keys.length()):
-            val = the_keys[i]
-            hash_var = self.hash_function(val) % new_capacity
-            hash_initial = self.hash_function(val) % new_capacity
-        
-            while self.buckets[hash_var] is not None:
-                hash_var = (hash_initial + j**2) % new_capacity
-                j+=1
-            
-            self.buckets[hash_var] = 2
-    
-    def resize_table(self, new_capacity: int) -> None:
+        for i in range(old_buckets.length()):
+            if old_buckets[i] is not None and old_buckets[i].is_tombstone is False:
+                self.put(old_buckets[i].key, old_buckets[i].value)
+
+    def resize_table2(self, new_capacity: int) -> None:
         """ This method changes the capacity of the internal hash table. """
         # remember to rehash non-deleted entries into new table
         if new_capacity < 1 or new_capacity < self.size:
