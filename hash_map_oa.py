@@ -123,9 +123,9 @@ class HashMap:
         hash_initial = self.hash_function(key) % self.capacity
         j = 1
 
-        while self.buckets[hash_var] is not None:
+        while self.buckets[hash_var]:
             if self.buckets[hash_var].key == key and self.buckets[hash_var].is_tombstone is False:
-                self.buckets[hash_var] = new_entry
+                self.buckets[hash_var].value = value
                 return
             elif self.buckets[hash_var].is_tombstone is True:
                 self.buckets[hash_var] = new_entry
@@ -185,11 +185,7 @@ class HashMap:
 
     def empty_buckets(self) -> int:
         """ This method returns the number of empty buckets in the hash table. """
-        count = 0
-        for i in range(self.buckets.length()):
-            if self.buckets[i] is None or self.buckets[i].is_tombstone is True:
-                count += 1
-        return count
+        return self.capacity - self.size 
 
     def table_load(self) -> float:
         """ This method returns the current hash table load factor. """
@@ -229,19 +225,21 @@ class HashMap:
         for i in range(new_capacity):
             new_array.append(None)
 
-
         for i in range(self.capacity):
-            if self.buckets[i]:
+            if self.buckets[i] is not None:
                 val = self.buckets[i]
-                hash_var = self.hash_function(val.key) % new_capacity
-                hash_initial = self.hash_function(val.key) % new_capacity
-                new_entry = HashEntry(val.key, val.value)
+                if val.is_tombstone is True:
+                    pass
+                else:
+                    hash_var = self.hash_function(val.key) % new_capacity
+                    hash_initial = self.hash_function(val.key) % new_capacity
+                    new_entry = HashEntry(val.key, val.value)
 
-                while new_array[hash_var] is not None:
-                    hash_var = (hash_initial + j**2) % new_capacity
-                    j+=1
+                    while new_array[hash_var] is not None:
+                        hash_var = (hash_initial + j**2) % new_capacity
+                        j+=1
             
-                new_array[hash_var] = new_entry
+                    new_array[hash_var] = new_entry
         
         self.capacity = new_capacity
         self.buckets = new_array
@@ -274,7 +272,7 @@ if __name__ == "__main__":
     print("\nPDF - empty_buckets example 2")
     print("-----------------------------")
     # this test assumes that put() has already been correctly implemented
-    m = HashMap(10, hash_function_1)
+    m = HashMap(50, hash_function_1)
     for i in range(150):
         m.put('key' + str(i), i * 100)
         if i % 30 == 0:
